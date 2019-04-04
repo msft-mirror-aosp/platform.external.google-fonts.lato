@@ -20,51 +20,32 @@ LOCAL_PATH := $(call my-dir)
 ifneq ($(SMALLER_FONT_FOOTPRINT),true)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := Lato-Regular.ttf
-LOCAL_SRC_FILES := $(LOCAL_MODULE)
-LOCAL_MODULE_CLASS := ETC
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_PATH := $(TARGET_OUT)/fonts
-include $(BUILD_PREBUILT)
 
-include $(CLEAR_VARS)
-LOCAL_MODULE := Lato-Italic.ttf
-LOCAL_SRC_FILES := $(LOCAL_MODULE)
-LOCAL_MODULE_CLASS := ETC
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_PATH := $(TARGET_OUT)/fonts
-include $(BUILD_PREBUILT)
+# Build the rest of font files as prebuilt.
+# $(1): The source file name in LOCAL_PATH.
+#       It also serves as the module name and the dest file name.
+define build-one-font-module
+$(eval include $(CLEAR_VARS))\
+$(eval LOCAL_MODULE := $(1))\
+$(eval LOCAL_SRC_FILES := $(1))\
+$(eval LOCAL_MODULE_CLASS := ETC)\
+$(eval LOCAL_MODULE_TAGS := optional)\
+$(eval LOCAL_MODULE_PATH := $(TARGET_OUT_PRODUCT)/fonts)\
+$(eval LOCAL_PRODUCT_MODULE := true) \
+$(eval include $(BUILD_PREBUILT))
+endef
 
-include $(CLEAR_VARS)
-LOCAL_MODULE := Lato-Medium.ttf
-LOCAL_SRC_FILES := $(LOCAL_MODULE)
-LOCAL_MODULE_CLASS := ETC
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_PATH := $(TARGET_OUT)/fonts
-include $(BUILD_PREBUILT)
+font_src_files := \
+    Lato-Regular.ttf \
+    Lato-Italic.ttf \
+    Lato-Medium.ttf \
+    Lato-MediumItalic.ttf \
+    Lato-Bold.ttf \
+    Lato-BoldItalic.ttf
 
-include $(CLEAR_VARS)
-LOCAL_MODULE := Lato-MediumItalic.ttf
-LOCAL_SRC_FILES := $(LOCAL_MODULE)
-LOCAL_MODULE_CLASS := ETC
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_PATH := $(TARGET_OUT)/fonts
-include $(BUILD_PREBUILT)
+$(foreach f, $(font_src_files), $(call build-one-font-module, $(f)))
 
-include $(CLEAR_VARS)
-LOCAL_MODULE := Lato-Bold.ttf
-LOCAL_SRC_FILES := $(LOCAL_MODULE)
-LOCAL_MODULE_CLASS := ETC
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_PATH := $(TARGET_OUT)/fonts
-include $(BUILD_PREBUILT)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := Lato-BoldItalic.ttf
-LOCAL_SRC_FILES := $(LOCAL_MODULE)
-LOCAL_MODULE_CLASS := ETC
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_PATH := $(TARGET_OUT)/fonts
-include $(BUILD_PREBUILT)
+build-one-font-module :=
+font_src_files :=
 
 endif
